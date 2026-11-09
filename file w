@@ -78,13 +78,10 @@ HeartbeatServo.write(ServoAngle);
 
 //transitor stuff
 String HeatPadValue = pReceivingHeatPadCharacteristic->getValue();
-int HeatPadValue = (int)HeatPadValue.charAt(0);
-if (HeatPadValue >= 1) {
+if (HeatPadValue == "OFF") {
   digitalWrite(10, LOW);
-
-}
-else
-digitalWrite(10, HIGH);
+} else {
+  digitalWrite(10, HIGH);
 }
 
 
