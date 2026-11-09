@@ -12,8 +12,10 @@ int lastBeat = 0;
 #define SERVICE_UUID "67ec9dee-b161-4d77-b2ad-832385086029"
 #define TRANSFERCHARACTERISTIC_UUID "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
 #define RECEIVINGCHARACTERISTIC_UUID "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
+#define RECEIVINGHEATPADCHARACTERISTIC_UUID "6E400004-B5A3-F393-E0A9-E50E24DCCA9E"
 BLECharacteristic *pTransferCharacteristic;
 BLECharacteristic *pReceivingCharacteristic;
+BLECharacteristic *pReceivingHeatPadCharacteristic;
 BLEService *pService;
 BLEServer *pServer;
 
@@ -34,8 +36,17 @@ pTransferCharacteristic = pService->createCharacteristic(
   BLECharacteristic::PROPERTY_NOTIFY
 
 ); 
+
 pReceivingCharacteristic = pService->createCharacteristic(
   RECEIVINGCHARACTERISTIC_UUID,
+  BLECharacteristic::PROPERTY_READ |
+  BLECharacteristic::PROPERTY_WRITE |
+  BLECharacteristic::PROPERTY_WRITE_NR |
+  BLECharacteristic::PROPERTY_NOTIFY
+);
+
+pReceivingHeatPadCharacteristic = pService->createCharacteristic(
+  RECEIVINGHEATPADCHARACTERISTIC_UUID,
   BLECharacteristic::PROPERTY_READ |
   BLECharacteristic::PROPERTY_WRITE |
   BLECharacteristic::PROPERTY_WRITE_NR |
@@ -65,9 +76,15 @@ int ServoAngle = (int)AngleValue.charAt(0);
 Serial.println(ServoAngle);
 HeartbeatServo.write(ServoAngle);
 
-
+//transitor stuff
+String HeatPadValue = pReceivingHeatPadCharacteristic->getValue();
+int HeatPadValue = (int)HeatPadValue.charAt(0);
+if (HeatPadValue >= 1) {
+  digitalWrite(10, LOW);
 
 }
-
+else
+digitalWrite(10, HIGH);
+}
 
 
